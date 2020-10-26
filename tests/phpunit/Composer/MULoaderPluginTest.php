@@ -253,6 +253,87 @@ class MULoaderPluginTest extends TestCase {
 		$plugin->overridePluginTypes( $packageEvent );
 	}
 
+	public function test_file_is_not_dumped_after_deactivation(): void {
+		$composer = $this->mock_composer(
+			[
+				'installer-paths' => [
+					'/mu-plugins/{$name}' => [
+						"type:wordpress-muplugin"
+					]
+				]
+			]
+		);
+
+		$io = $this->getMockBuilder( IOInterface::class )->getMock();
+
+		$plugin = new MULoaderPlugin();
+		$plugin->activate($composer, $io);
+		$plugin->deactivate($composer, $io);
+
+		$plugin->dumpRequireFile();
+
+		self::assertFileNotExists( self::TMP_DIR . '/mu-plugins/mu-require.php' );
+	}
+
+	public function test_override_plugin_types_does_nothing_after_deactivation(): void {
+		$pluginName = 'vendor/wp-plugin';
+
+		$composer = $this->mock_composer(
+			[
+				'installer-paths' => [
+					'/mu-plugins/{$name}' => [
+						'type:wordpress-muplugin'
+					]
+				],
+				'force-mu' => [
+					$pluginName
+				],
+			]
+		);
+
+		$io = $this->getMockBuilder( IOInterface::class )->getMock();
+
+		$plugin = new MULoaderPlugin();
+		$plugin->activate($composer, $io);
+		$plugin->deactivate($composer, $io);
+
+		$package = $this->mock_package( $pluginName );
+		$package->expects( self::never() )->method( 'setType' )->with( 'wordpress-muplugin' );
+
+		$operation = $this->getMockBuilder( UpdateOperation::class )->disableOriginalConstructor()->getMock();
+		$operation->method( 'getTargetPackage' )->willReturn( $package );
+
+		$packageEvent = $this->getMockBuilder( PackageEvent::class )->disableOriginalConstructor()->getMock();
+		$packageEvent->method( 'getOperation' )->willReturn( $operation );
+
+		$plugin->overridePluginTypes( $packageEvent );
+	}
+
+	public function test_uninstall_removes_dumped_require_file(): void {
+		$composer = $this->mock_composer(
+			[
+				'installer-paths' => [
+					'/mu-plugins/{$name}' => [
+						"type:wordpress-muplugin"
+					]
+				]
+			]
+		);
+
+		$io = $this->getMockBuilder( IOInterface::class )->getMock();
+
+		$plugin = new MULoaderPlugin();
+		$plugin->activate($composer, $io);
+
+		$plugin->dumpRequireFile();
+
+		self::assertFileExists( self::TMP_DIR . '/mu-plugins/mu-require.php' );
+
+		$plugin->uninstall($composer, $io);
+
+		self::assertFileNotExists( self::TMP_DIR . '/mu-plugins/mu-require.php' );
+	}
+
 	/**
 	 * @param array $extraConfig Config for the extra section you want returned from getExtra()
 	 *
