@@ -259,4 +259,24 @@ class MULoaderPlugin implements PluginInterface, EventSubscriberInterface {
  */
 DOCBLOCK;
 	}
+
+	/**
+	 * Deactivate method will be used in a future update to unset properties set in activate.
+	 *
+	 * @param Composer    $composer
+	 * @param IOInterface $io
+	 */
+	public function deactivate( Composer $composer, IOInterface $io ) {
+		// TODO: Implement deactivate() method.
+	}
+
+	/**
+	 * Uninstall method will be used in a future update to remove the generated require file.
+	 *
+	 * @param Composer    $composer
+	 * @param IOInterface $io
+	 */
+	public function uninstall( Composer $composer, IOInterface $io ) {
+		// TODO: Implement uninstall() method.
+	}
 }
