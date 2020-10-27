@@ -10,11 +10,13 @@
  * @copyright Luke Woodward
  * @package WP_MUPlugin_Loader
  */
+
 namespace LkWdwrd\Composer;
 
 /**
  * Use the necessary namespaces.
  */
+
 use Composer\Composer;
 use Composer\Config;
 use Composer\DependencyResolver\Operation\UpdateOperation;
@@ -65,6 +67,7 @@ class MULoaderPlugin implements PluginInterface, EventSubscriberInterface {
 	 *
 	 * @param Composer    $composer The main Composer object.
 	 * @param IOInterface $io       The I/O Helper object.
+	 *
 	 * @return void
 	 */
 	public function activate( Composer $composer, IOInterface $io ): void {
@@ -100,7 +103,8 @@ class MULoaderPlugin implements PluginInterface, EventSubscriberInterface {
 	 * from WPackagist, there is no need to include the `wpackagist-plugin`
 	 * prefix. Just use the slug as it appears in the wordpress.org repository.
 	 *
-	 * @param  PackageEvent $event The package event for the current package.
+	 * @param PackageEvent $event The package event for the current package.
+	 *
 	 * @return void
 	 */
 	public function overridePluginTypes( PackageEvent $event ): void {
@@ -119,7 +123,7 @@ class MULoaderPlugin implements PluginInterface, EventSubscriberInterface {
 
 		// Only act when there is a force-mu key holding an array in extras
 		$extras = $this->extras;
-		if( empty( $extras['force-mu'] ) || !is_array( $extras['force-mu'] ) ) {
+		if ( empty( $extras['force-mu'] ) || ! is_array( $extras['force-mu'] ) ) {
 			return;
 		}
 
@@ -142,29 +146,25 @@ class MULoaderPlugin implements PluginInterface, EventSubscriberInterface {
 	 * @return void
 	 */
 	public function dumpRequireFile(): void {
-		$muRelPath = $this->findMURelPath();
+		$muPath = $this->getMuPath();
 
-		// If we didn't find a relative MU Plugins path, bail.
-		if ( ! $muRelPath ) {
+		if ( $muPath === '' ) {
 			return;
 		}
 
-		// Find the relative path from the mu-plugins dir to the mu-loader file.
-		$muPath = $this->resolveMURelPath( $muRelPath );
+		$muRequireFile = $this->getMuRequireFile();
+
 		$ds = $this->getDirectorySeparator();
 		$loadFile = dirname( __DIR__ ) . $ds . 'mu-loader.php';
 		$toLoader = $ds . Util\rel_path( $muPath, $loadFile, $ds );
 
-		// Write the boostrapping PHP file.
-		if ( !file_exists( $muPath ) ) {
-			mkdir( $muPath, 0755, true );
-		}
-
-		// Allow the name of the mu-require to be specified.
-		$muRequireFile = $this->extras['mu-require-file'] ?? self::DEFAULT_MU_REQUIRE_FILE;
-
 		// This allows users to also turn off the auto generation of mu-require if they wish.
-		if ( $muRequireFile !== false ) {
+		if ( $muRequireFile !== 'false' ) {
+			// Write the boostrapping PHP file.
+			if ( ! file_exists( $muPath ) ) {
+				mkdir( $muPath, 0755, true );
+			}
+
 			file_put_contents(
 				$muPath . $muRequireFile,
 				// Need to break up __DIR__ to stop this https://github.com/composer/composer/blob/32966a3b1d48bc01472a8321fd6472b44fad033a/src/Composer/Plugin/PluginManager.php#L193 occurring.
@@ -192,7 +192,7 @@ class MULoaderPlugin implements PluginInterface, EventSubscriberInterface {
 			return false;
 		}
 		// Find the array to the mu-plugin path.
-		foreach( $this->extras['installer-paths'] as $path => $types ) {
+		foreach ( $this->extras['installer-paths'] as $path => $types ) {
 			if ( ! is_array( $types ) ) {
 				continue;
 			}
@@ -202,13 +202,15 @@ class MULoaderPlugin implements PluginInterface, EventSubscriberInterface {
 			$path = str_replace( '{$name}', '', $path );
 			break;
 		}
+
 		return $path;
 	}
 
 	/**
 	 * Takes the relative Must-Use plugins path and send back the abslute path.
 	 *
-	 * @param  string $relpath The relative `mu-plugins` path.
+	 * @param string $relpath The relative `mu-plugins` path.
+	 *
 	 * @return string          The absolute `mu-plugins` path.
 	 */
 	protected function resolveMURelPath( $relpath ): string {
@@ -218,9 +220,43 @@ class MULoaderPlugin implements PluginInterface, EventSubscriberInterface {
 		} else {
 			$tag = '';
 		}
-		$basepath = str_replace( $tag, '', $this->config->get('vendor-dir') );
+		$basepath = str_replace( $tag, '', $this->config->get( 'vendor-dir' ) );
+
 		// Return the absolute path.
 		return $basepath . $relpath;
+	}
+
+	/**
+	 * Find MU path.
+	 *
+	 * @return string
+	 */
+	private function getMuPath(): string {
+		$muRelPath = $this->findMURelPath();
+
+		// If we didn't find a relative MU Plugins path, bail.
+		if ( ! $muRelPath ) {
+			return '';
+		}
+
+		// Find the relative path from the mu-plugins dir to the mu-loader file.
+		return $this->resolveMURelPath( $muRelPath );
+	}
+
+	/**
+	 * Get the filename for the mu require file.
+	 *
+	 * @return string
+	 */
+	private function getMuRequireFile(): string {
+		// Allow the name of the mu-require to be specified.
+		$muRequireFile = $this->extras['mu-require-file'] ?? self::DEFAULT_MU_REQUIRE_FILE;
+
+		if ( $muRequireFile === false ) {
+			return 'false';
+		}
+
+		return $muRequireFile;
 	}
 
 	/**
@@ -261,22 +297,28 @@ DOCBLOCK;
 	}
 
 	/**
-	 * Deactivate method will be used in a future update to unset properties set in activate.
+	 * This is used to remove any hooks from composer. We'll use it to unset properties set in activation.
 	 *
-	 * @param Composer    $composer
+	 * @param Composer $composer
 	 * @param IOInterface $io
 	 */
-	public function deactivate( Composer $composer, IOInterface $io ) {
-		// TODO: Implement deactivate() method.
+	public function deactivate( Composer $composer, IOInterface $io ): void {
+		$this->extras = [];
+		$this->config = new Config();
 	}
 
 	/**
-	 * Uninstall method will be used in a future update to remove the generated require file.
+	 * This is used for removal of anything added by the plugin. We will use it to remove our dumped autoload file.
 	 *
-	 * @param Composer    $composer
+	 * @param Composer $composer
 	 * @param IOInterface $io
 	 */
-	public function uninstall( Composer $composer, IOInterface $io ) {
-		// TODO: Implement uninstall() method.
+	public function uninstall( Composer $composer, IOInterface $io ): void {
+		$muPath = $this->getMuPath();
+		$muRequireFile = $this->getMuRequireFile();
+
+		if ( file_exists( $muPath . $muRequireFile ) ) {
+			unlink( $muPath . $muRequireFile );
+		}
 	}
 }
