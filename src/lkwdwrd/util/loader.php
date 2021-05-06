@@ -36,6 +36,7 @@ function mu_loader( $plugins = false, $ps = PS, $mudir = MUDIR ): void {
 		$plugins = get_muplugins();
 	}
 	foreach( $plugins as $plugin ) {
+		wp_register_plugin_realpath( $mudir . $ps . $plugin );
 		require_once $mudir . $ps . $plugin;
 	}
 }
