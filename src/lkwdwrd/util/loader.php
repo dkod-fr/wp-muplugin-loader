@@ -36,7 +36,10 @@ function mu_loader( $plugins = false, $ps = PS, $mudir = MUDIR ): void {
 		$plugins = get_muplugins();
 	}
 	foreach( $plugins as $plugin ) {
-		wp_register_plugin_realpath( $mudir . $ps . $plugin );
+		// Conditionally register the MU plugin in WordPress 3.9 or newer.
+		if ( function_exists( 'wp_register_plugin_realpath' ) ) {
+			wp_register_plugin_realpath( $mudir . $ps . $plugin );
+		}
 		require_once $mudir . $ps . $plugin;
 	}
 }
