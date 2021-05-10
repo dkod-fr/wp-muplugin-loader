@@ -15,6 +15,7 @@ class Assets_Tests extends TestCase {
 	public function setUp(): void {
 		require_once PROJECT . '/util/assets.php';
 
+		define( 'SYMLINK_PARENT_DIR', __DIR__ . '/tmp/symlink' );
 		define( 'WPMU_PLUGIN_DIR', __DIR__ . '/tmp/mu-plugins' );
 		define( 'WP_PLUGIN_DIR', __DIR__ . '/tmp/plugins' );
 		define( 'WPMU_PLUGIN_URL', 'https://example.com/mu-plugins' );
@@ -27,8 +28,14 @@ class Assets_Tests extends TestCase {
 	 * Remove any directories that may have been created during our tests run.
 	 */
 	public function tearDown(): void {
+		// Remove symbolic link.
 		if ( file_exists( __DIR__ . '/tmp/mu-plugins/' . self::PLUGIN_NAME ) ) {
-			rmdir( __DIR__ . '/tmp/mu-plugins/' . self::PLUGIN_NAME );
+			unlink( __DIR__ . '/tmp/mu-plugins/' . self::PLUGIN_NAME );
+		}
+
+		// Remove physical file.
+		if ( file_exists( __DIR__ . '/tmp/symlink/' . self::PLUGIN_NAME ) ) {
+			rmdir( __DIR__ . '/tmp/symlink/' . self::PLUGIN_NAME );
 		}
 
 		parent::tearDown();
@@ -57,9 +64,22 @@ class Assets_Tests extends TestCase {
 	public function test_plugins_url_returns_updated_url_if_mu_plugin_exists(): void {
 		$plugins_url = WP_PLUGIN_URL . '/' . self::PLUGIN_NAME;
 
-		// Create the directory in our mu-plugins dir
-		if ( ! mkdir( $plugin_directory = WPMU_PLUGIN_DIR . '/' . self::PLUGIN_NAME ) && ! is_dir( $plugin_directory ) ) {
-			throw new \RuntimeException( sprintf( 'Directory "%s" was not created', $plugin_directory ) );
+		$symlink_directory = SYMLINK_PARENT_DIR . '/' . self::PLUGIN_NAME;
+		$plugin_directory  = WPMU_PLUGIN_DIR . '/' . self::PLUGIN_NAME;
+
+		// Create the directory we wish to symlink.
+		if ( ! mkdir( $symlink_directory ) || ! is_dir( $symlink_directory ) ) {
+			throw new \RuntimeException( sprintf( 'Directory "%s" was not created', $symlink_directory ) );
+		}
+
+		/*
+		 * Create a symbolic link, where `$symlink_directory` is a physical folder,
+		 * and `$plugin_directory` is where it should be mirrored to.
+		 *
+		 * Follow up by confirming that the mirrored location is identified as a valid directory.
+		 */
+		if ( ! symlink( $symlink_directory, $plugin_directory ) || ! is_dir( $plugin_directory ) ) {
+			throw new \RuntimeException( sprintf( 'Unable to symlink the "%1$s" directory to "%2$s"', $symlink_directory, $plugin_directory ) );
 		}
 
 		$mu_plugins_url = WPMU_PLUGIN_URL . '/' . self::PLUGIN_NAME;
