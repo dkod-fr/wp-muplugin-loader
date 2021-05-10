@@ -16,7 +16,7 @@ namespace LkWdwrd\MU_Loader\Assets;
  * @param string $plugin The absolute path to the file requesting the asset URL.
  * @return string        The full URL to the plugin asset.
  */
-function plugins_url( $url, $path, $plugin ) {
+function plugins_url( $url, $path = '', $plugin = '' ) {
 	// If the relative file is within a known directory, return the URL as usual.
 	if ( strstr( $plugin, WPMU_PLUGIN_DIR ) || strstr( $plugin, WP_PLUGIN_DIR ) ) {
 		return $url;
