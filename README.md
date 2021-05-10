@@ -24,7 +24,7 @@ In your project's `composer.json` file, require this package.
 "require": {
 	"composer/installers": "~1.2.0",
 	"johnpbloch/wordpress": "*",
-	"lkwdwrd/wp-muplugin-loader": "~1.0.0",
+	"boxuk/wp-muplugin-loader": "~1.0",
 }
 ```
 Make sure in the `extras` of your `composer.json` you have your mu-plugins path defined.
@@ -81,7 +81,7 @@ This is compatible with [WPackagist](https://wpackagist.org/). When adding plugi
 ```json
 "require": {
 	"johnpbloch/wordpress": "*",
-	"lkwdwrd/wp-muplugin-loader": "~1.0.0",
+	"boxuk/wp-muplugin-loader": "~1.0",
 	"wpackagist-plugin/rest-api": "*"
 },
 "extra": {
