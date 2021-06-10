@@ -26,7 +26,7 @@ function plugins_url( $url, $path = '', $plugin = '' ) {
 	$relative_path = str_replace( WP_PLUGIN_URL, '', $url );
 
 	// Only modify the URL if the path is to an existing mu plugin with the file existing.
-	if ( file_exists( WPMU_PLUGIN_DIR . $relative_path ) ) {
+	if ( ! empty( $relative_path ) && file_exists( WPMU_PLUGIN_DIR . $relative_path ) ) {
 		$url = WPMU_PLUGIN_URL . $relative_path;
 	}
 

@@ -41,6 +41,47 @@ class Assets_Tests extends TestCase {
 		parent::tearDown();
 	}
 
+	public function test_core_plugins_url_functions_as_expected(): void {
+		WP_Mock::userFunction(
+			'plugins_url', [
+				'args' => [ '*', '*' ],
+				'return' => function( $path = '', $plugin = '') {
+					// Simplified version of core plugins_url().
+
+					$mu_plugin_dir = WPMU_PLUGIN_DIR;
+
+					if ( ! empty( $plugin ) && 0 === strpos( $plugin, $mu_plugin_dir ) ) {
+						$url = WPMU_PLUGIN_URL;
+					} else {
+						$url = WP_PLUGIN_URL;
+					}
+
+					$url = trim( $url );
+					if ( substr( $url, 0, 2 ) === '//' ) {
+						$url = 'http:' . $url;
+					}
+
+					$url = preg_replace( '#^\w+://#', 'https://', $url );
+
+					if ( $path && is_string( $path ) ) {
+						$url .= '/' . ltrim( $path, '/' );
+					}
+
+					// Couldn't get the filter stuff working as expected in wp_mock, so work around it.
+					//return apply_filters( 'plugins_url', $url, $path, $plugin );
+					return Assets\plugins_url( $url, $path, $plugin );
+				}
+			]
+		);
+
+		// See above comment about not getting filter stuff working in wp_mock.
+		//WP_Mock::onFilter( 'plugins_url' )
+		//	->with( [ '', '', ''] )
+		//	->reply( Assets\plugins_url( '' ) );
+
+		self::assertEquals( WP_PLUGIN_URL, plugins_url( '', '' ) );
+	}
+
 	/**
 	 * If a plugins url is already in a known directory, ensure it returns unchanged.
 	 */
