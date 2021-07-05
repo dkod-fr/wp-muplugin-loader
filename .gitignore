@@ -6,3 +6,4 @@
 /tests/phpunit/tmp/mu-plugins/*
 !/tests/phpunit/tmp/mu-plugins/.gitkeep
 .phpunit.result.cache
+clover.xml
