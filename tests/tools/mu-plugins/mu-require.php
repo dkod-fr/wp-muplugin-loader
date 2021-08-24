@@ -9,4 +9,4 @@
  *
  * @since 1.1.0
  */
-require_once __DIR__ . '/../../../../src/lkwdwrd/mu-loader.php';
+require_once __DIR__ . '/../../../src/mu-loader.php';

@@ -10,13 +10,20 @@ matrix:
   allow_failures:
     - php: nightly
 
-install: composer install
-
-script: composer test
-
 cache:
-  directories:
-    - vendor
+    directories:
+        - $HOME/.composer/cache
+        - $HOME/.php-cs-fixer
+
+before_script:
+    - phpenv config-rm xdebug.ini
+    - composer self-update
+    - composer install
+    - composer install --working-dir=tools/php-cs-fixer
+
+script:
+    - PHP_CS_FIXER_IGNORE_ENV=1 ./tools/php-cs-fixer/vendor/bin/php-cs-fixer fix -v --diff --dry-run
+    - composer test
 
 branches:
   only:
