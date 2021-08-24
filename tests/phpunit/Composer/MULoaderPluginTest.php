@@ -89,7 +89,7 @@ class MULoaderPluginTest extends TestCase {
 
 		$plugin->dumpRequireFile();
 
-		self::assertFileNotExists( self::TMP_DIR . '/mu-plugins/mu-require.php' );
+		self::assertFileDoesNotExist( self::TMP_DIR . '/mu-plugins/mu-require.php' );
 	}
 
 	public function test_override_plugin_types_sets_type_of_package_on_install(): void {
@@ -272,7 +272,7 @@ class MULoaderPluginTest extends TestCase {
 
 		$plugin->dumpRequireFile();
 
-		self::assertFileNotExists( self::TMP_DIR . '/mu-plugins/mu-require.php' );
+		self::assertFileDoesNotExist( self::TMP_DIR . '/mu-plugins/mu-require.php' );
 	}
 
 	public function test_override_plugin_types_does_nothing_after_deactivation(): void {
@@ -331,7 +331,7 @@ class MULoaderPluginTest extends TestCase {
 
 		$plugin->uninstall($composer, $io);
 
-		self::assertFileNotExists( self::TMP_DIR . '/mu-plugins/mu-require.php' );
+		self::assertFileDoesNotExist( self::TMP_DIR . '/mu-plugins/mu-require.php' );
 	}
 
 	/**
