@@ -7,17 +7,7 @@
  * @package WP_MUPlugin_Loader
  */
 
-namespace LkWdwrd\MU_Loader\List_Table;
-
-/**
- * Use the necessary namespaces.
- */
-use LkWdwrd\MU_Loader\Loader;
-
-// Create some aliases for long-named constants
-const PS = DIRECTORY_SEPARATOR;
-const LT = \WP_Plugins_List_Table::class;
-const MUDIR = WPMU_PLUGIN_DIR;
+namespace LkWdwrd\MuPluginLoader\Util;
 
 /**
  * Creates additional list-table to display all loaded Must-Use Plugins.
@@ -34,16 +24,17 @@ const MUDIR = WPMU_PLUGIN_DIR;
  * @param  string                        $mudir The Must-Use Plugins directory.
  * @return void
  */
-function list_table( $lt = LT, $ps = PS, $mudir = MUDIR ): void {
-	$table = new $lt;
-	$spacer = '+&nbsp;&nbsp;';
+function list_table($lt = \WP_Plugins_List_Table::class, $ps = DIRECTORY_SEPARATOR, $mudir = WPMU_PLUGIN_DIR): void
+{
+    $table = new $lt();
+    $spacer = '+&nbsp;&nbsp;';
 
-	foreach ( Loader\get_muplugins() as $plugin_file) {
-		$plugin_data = get_plugin_data( $mudir . $ps . $plugin_file, false);
-		if ( empty( $plugin_data['Name'] ) ) {
-			$plugin_data['Name'] = $plugin_file;
-		}
-		$plugin_data['Name'] = $spacer . $plugin_data['Name'];
-		$table->single_row( array( $plugin_file, $plugin_data ) );
-	}
+    foreach (get_muplugins() as $plugin_file) {
+        $plugin_data = get_plugin_data($mudir . $ps . $plugin_file, false);
+        if (empty($plugin_data['Name'])) {
+            $plugin_data['Name'] = $plugin_file;
+        }
+        $plugin_data['Name'] = $spacer . $plugin_data['Name'];
+        $table->single_row([ $plugin_file, $plugin_data ]);
+    }
 }

@@ -22,16 +22,19 @@
     ],
     "autoload": {
         "psr-4": {
-            "LkWdwrd\\Composer\\": "src/lkwdwrd/Composer"
-        }
+            "LkWdwrd\\MuPluginLoader\\": "src"
+        },
+        "files": [
+            "src/Util/util.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "LkWdwrd\\Composer\\Tests\\": "tests/phpunit/Composer"
+            "LkWdwrd\\MuPluginLoader\\Tests\\": "tests"
         }
     },
     "extra": {
-        "class": "LkWdwrd\\Composer\\MULoaderPlugin"
+        "class": "LkWdwrd\\MuPluginLoader\\Composer\\MuLoaderPlugin"
     },
     "require": {
         "php": "^7.3 || ^8.0",
@@ -44,6 +47,8 @@
         "mockery/mockery": "~1.3"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit --colors"
+        "test": "vendor/bin/phpunit --colors",
+        "php-cs-fixer:test": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix -v --diff --dry-run",
+        "php-cs-fixer:fix": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix -v --diff"
     }
 }

@@ -1,9 +1,11 @@
 .idea
-/vendor
+vendor
 /phpunit.xml
 /bootstrap.php
 /build
-/tests/phpunit/tmp/mu-plugins/*
-!/tests/phpunit/tmp/mu-plugins/.gitkeep
+/tests/tmp/mu-plugins/*
+!/tests/tmp/mu-plugins/.gitkeep
 .phpunit.result.cache
 clover.xml
+.php-cs-fixer.cache
+tools/**/composer.lock
