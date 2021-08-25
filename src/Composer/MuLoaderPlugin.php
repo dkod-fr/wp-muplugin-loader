@@ -43,8 +43,7 @@ require_once dirname( __DIR__ ) . '/Util/util.php';
 class MuLoaderPlugin implements PluginInterface, EventSubscriberInterface
 {
     /**
-     * Version for the generated dockblock should get worked out dynamically from composer. This is a fallback and
-     * useful for testing also.
+     * Version for the generated docblock.
      */
     public const VERSION = '2.0.0';
 
@@ -88,8 +87,7 @@ class MuLoaderPlugin implements PluginInterface, EventSubscriberInterface
     {
         $this->extras = $composer->getPackage()->getExtra();
         $this->config = $composer->getConfig();
-        $this->version = $composer->getPackage()->getVersion() !== '' ?
-            $composer->getPackage()->getVersion() : self::VERSION;
+        $this->version = self::VERSION;
     }
 
     /**

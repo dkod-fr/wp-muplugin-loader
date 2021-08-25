@@ -392,7 +392,6 @@ class MuLoaderPluginTest extends TestCase
         $composer = $this->getMockBuilder(Composer::class)->getMock();
 
         $package->method('getExtra')->willReturn($extraConfig);
-        $package->method('getVersion')->willReturn(MuLoaderPlugin::VERSION);
 
         $config->method('has')->with('vendor-dir')->willReturn(false);
         $config->method('get')->with('vendor-dir')->willReturn(self::TMP_DIR);
