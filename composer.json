@@ -34,7 +34,7 @@
         }
     },
     "extra": {
-        "class": "LkWdwrd\\MuPluginLoader\\MuLoaderPlugin"
+        "class": "LkWdwrd\\MuPluginLoader\\Composer\\MuLoaderPlugin"
     },
     "require": {
         "php": "^7.3 || ^8.0",
