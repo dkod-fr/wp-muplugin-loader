@@ -52,7 +52,7 @@ add_action(
  */
 add_filter(
     'plugins_url',
-    __NAMESPACE__ . '\\plugins_url',
+    'LkWdwrd\MuPluginLoader\Util\plugins_url',
     10,
     3
 );

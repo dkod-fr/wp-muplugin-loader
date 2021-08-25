@@ -29,7 +29,7 @@ use LkWdwrd\MuPluginLoader\Util;
 /**
  * Require the utility functions.
  */
-require_once dirname( __DIR__ ) . '/Util/util.php';
+require_once dirname(__DIR__) . '/Util/util.php';
 
 /**
  * A Composer plugin for autoloading WordPress Must-Use plugins.
