@@ -38,6 +38,12 @@ use LkWdwrd\MuPluginLoader\Util;
 class MuLoaderPlugin implements PluginInterface, EventSubscriberInterface
 {
     /**
+     * Version for the generated dockblock should get worked out dynamically from composer. This is a fallback and
+     * useful for testing also.
+     */
+    public const VERSION = '2.0.0';
+
+    /**
      * Default name of our generated mu require file.
      *
      * @var string
@@ -59,6 +65,13 @@ class MuLoaderPlugin implements PluginInterface, EventSubscriberInterface
     private $config = null;
 
     /**
+     * Version of the package to use for the docblock.
+     *
+     * @var string
+     */
+    private $version = self::VERSION;
+
+    /**
      * Stores the extras array and config object for later use.
      *
      * @param Composer    $composer The main Composer object.
@@ -70,6 +83,8 @@ class MuLoaderPlugin implements PluginInterface, EventSubscriberInterface
     {
         $this->extras = $composer->getPackage()->getExtra();
         $this->config = $composer->getConfig();
+        $this->version = $composer->getPackage()->getVersion() !== '' ?
+            $composer->getPackage()->getVersion() : self::VERSION;
     }
 
     /**
@@ -170,7 +185,7 @@ class MuLoaderPlugin implements PluginInterface, EventSubscriberInterface
             file_put_contents(
                 $muPath . $muRequireFile,
                 // Need to break up __DIR__ to stop this https://github.com/composer/composer/blob/32966a3b1d48bc01472a8321fd6472b44fad033a/src/Composer/Plugin/PluginManager.php#L193 occurring.
-                "<?php\n" . self::getMuRequireGeneratedDocBlock() . "\n" . 'require_once __DI' . 'R__ . ' . "'${toLoader}';\n"
+                "<?php\n" . $this->getMuRequireGeneratedDocBlock() . "\n" . 'require_once __DI' . 'R__ . ' . "'${toLoader}';\n"
             );
         }
     }
@@ -288,14 +303,15 @@ class MuLoaderPlugin implements PluginInterface, EventSubscriberInterface
      *
      * @return string
      */
-    public static function getMuRequireGeneratedDocBlock(): string
+    public function getMuRequireGeneratedDocBlock(): string
     {
+        $version = $this->version;
         return <<<DOCBLOCK
 /**
  * Plugin Name: MU Plugin Loader
  * Plugin URI: https://github.com/boxuk/wp-muplugin-loader
  * Description: MU Plugin Loader - Autoload your mu-plugin directories.
- * Version: 1.1.0
+ * Version: {$version}
  * Author: Box UK / Luke Woodward
  * Author URI: https://github.com/boxuk/wp-muplugin-loader
  *

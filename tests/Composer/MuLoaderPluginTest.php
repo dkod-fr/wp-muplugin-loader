@@ -347,6 +347,39 @@ class MuLoaderPluginTest extends TestCase
         self::assertFileDoesNotExist(self::TMP_DIR . '/mu-plugins/mu-require.php');
     }
 
+    public function test_dump_require_file_overwrites_existing_file(): void
+    {
+        $composer = $this->mock_composer(
+            [
+                'installer-paths' => [
+                    '/mu-plugins/{$name}' => [
+                        "type:wordpress-muplugin"
+                    ]
+                ]
+            ]
+        );
+
+        $io = $this->getMockBuilder(IOInterface::class)->getMock();
+
+        $plugin = new MuLoaderPlugin();
+        $plugin->activate($composer, $io);
+
+        $plugin->dumpRequireFile();
+
+        self::assertFileExists(self::TMP_DIR . '/mu-plugins/mu-require.php');
+
+        $createdFileModifiedTime = filemtime(self::TMP_DIR . '/mu-plugins/mu-require.php');
+
+        // Sleep for 1 second to ensure the filemtime changes.
+        sleep(1);
+
+        $plugin->dumpRequireFile();
+
+        $updatedFileModifiedTime = filemtime(self::TMP_DIR . '/mu-plugins/mu-require.php');
+
+        self::assertNotEquals($createdFileModifiedTime, $updatedFileModifiedTime);
+    }
+
     /**
      * @param array $extraConfig Config for the extra section you want returned from getExtra()
      *
@@ -359,6 +392,7 @@ class MuLoaderPluginTest extends TestCase
         $composer = $this->getMockBuilder(Composer::class)->getMock();
 
         $package->method('getExtra')->willReturn($extraConfig);
+        $package->method('getVersion')->willReturn(MuLoaderPlugin::VERSION);
 
         $config->method('has')->with('vendor-dir')->willReturn(false);
         $config->method('get')->with('vendor-dir')->willReturn(self::TMP_DIR);
