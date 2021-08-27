@@ -33,7 +33,7 @@ const MUDIR = WPMU_PLUGIN_DIR;
  */
 function mu_loader( $plugins = false, $ps = PS, $mudir = MUDIR ): void {
 	if ( ! $plugins ) {
-		$plugins = get_muplugins();
+		$plugins = get_muplugins(ABSPATH, WP_PLUGIN_DIR, $mudir);
 	}
 	foreach( $plugins as $plugin ) {
 		// Conditionally register the MU plugin in WordPress 3.9 or newer.
