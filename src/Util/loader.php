@@ -33,6 +33,8 @@ function mu_loader($plugins = false, $ps = DIRECTORY_SEPARATOR, $mudir = WPMU_PL
         }
         require_once $mudir . $ps . $plugin;
     }
+
+    do_action('lkwdwrd_mupluginloader_muplugins_loaded');
 }
 
 /**
