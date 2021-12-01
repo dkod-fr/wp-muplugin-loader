@@ -42,6 +42,8 @@ function mu_loader( $plugins = false, $ps = PS, $mudir = MUDIR ): void {
 		}
 		require_once $mudir . $ps . $plugin;
 	}
+
+	do_action('lkwdwrd_mupluginloader_muplugins_loaded');
 }
 
 /**
