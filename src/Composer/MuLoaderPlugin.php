@@ -145,7 +145,7 @@ class MuLoaderPlugin implements PluginInterface, EventSubscriberInterface
         }
 
         // Check to see if the current package is in the force-mu extra
-        // If it is, set it's type to 'wordpress-muplugin'
+        // If it is, set its type to 'wordpress-muplugin'
         $slug = str_replace('wpackagist-plugin/', '', $package->getName());
         if (in_array($slug, $extras['force-mu'], true)) {
             $package->setType('wordpress-muplugin');
