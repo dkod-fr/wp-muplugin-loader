@@ -21,7 +21,7 @@ namespace LkWdwrd\MuPluginLoader\Util;
  *                             Default: WPMU_PLUGIN_DIR
  * @return void
  */
-function mu_loader($plugins = false, $ps = DIRECTORY_SEPARATOR, $mudir = WPMU_PLUGIN_DIR): void
+function mu_loader($plugins = false, string $ps = DIRECTORY_SEPARATOR, string $mudir = WPMU_PLUGIN_DIR): void
 {
     if (! $plugins) {
         $plugins = get_muplugins(ABSPATH, WP_PLUGIN_DIR, $mudir);
@@ -52,10 +52,10 @@ function mu_loader($plugins = false, $ps = DIRECTORY_SEPARATOR, $mudir = WPMU_PL
  * @param  string $ps    The path seperator to use. Default: DIRECTORY_SEPARATOR
  * @return array         An array of aboslute paths to the plugin files.
  */
-function get_muplugins($abs = ABSPATH, $pdir = WP_PLUGIN_DIR, $mudir = WPMU_PLUGIN_DIR, $ps = DIRECTORY_SEPARATOR): array
+function get_muplugins(string $abs = ABSPATH, string $pdir = WP_PLUGIN_DIR, string $mudir = WPMU_PLUGIN_DIR, string $ps = DIRECTORY_SEPARATOR): array
 {
     $key = get_muloader_key($mudir);
-    //Try to get the plugin list from the cache
+    // Try to get the plugin list from the cache
     $plugins = get_site_transient($key);
     // If the cache missed, regenerate it.
     if ($plugins === false) {
@@ -93,7 +93,7 @@ function get_muplugins($abs = ABSPATH, $pdir = WP_PLUGIN_DIR, $mudir = WPMU_PLUG
  * @param  string $mudir The MU Plugins Directory. Default: WPMU_PLUGIN_DIR
  * @return string        An MD5 cache key to use.
  */
-function get_muloader_key($mudir = WPMU_PLUGIN_DIR): string
+function get_muloader_key(string $mudir = WPMU_PLUGIN_DIR): string
 {
     $old_key = get_site_transient('lkw_mu_loader_key');
     $key = md5(json_encode(scandir($mudir)));

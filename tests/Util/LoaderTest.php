@@ -15,8 +15,12 @@ class LoaderTest extends TestCase
      */
     public function setUp(): void
     {
-        define('WPMU_PLUGIN_DIR', __DIR__ . '/../tools');
-        define('WP_PLUGIN_DIR', '/other');
+        if (! defined('WPMU_PLUGIN_DIR')) {
+            define('WPMU_PLUGIN_DIR', __DIR__ . '/../tools');
+        }
+        if (! defined('WP_PLUGIN_DIR')) {
+            define('WP_PLUGIN_DIR', '/other');
+        }
         $this->key = md5(json_encode(scandir(WPMU_PLUGIN_DIR)));
         require_once PROJECT . '/Util/loader.php';
         WP_Mock::setUp();
@@ -143,6 +147,7 @@ class LoaderTest extends TestCase
             'return' => 'relpath'
         ]);
         WP_Mock::passthruFunction('set_site_transient');
+
         // Run the test.
         // This will include `tools/wp-admin/includes/plugin.php` which sets
         // a flag in it's namespace to indicate it has loaded.

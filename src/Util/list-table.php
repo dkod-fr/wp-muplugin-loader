@@ -12,9 +12,9 @@ namespace LkWdwrd\MuPluginLoader\Util;
 /**
  * Creates additional list-table to display all loaded Must-Use Plugins.
  *
- * Grabs all of the loaded must-use plugins, gets the data object for each, and
+ * Grabs all the loaded must-use plugins, gets the data object for each, and
  * then uses the core list-table object to print additional rows for each of
- * the loaded plugins complete with all of the plugin info nomrally available
+ * the loaded plugins complete with all the plugin info normally available
  * in the list-table.
  *
  * Each name is prefixed with '+  ' to help indicate it was added through the
