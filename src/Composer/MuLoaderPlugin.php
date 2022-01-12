@@ -3,7 +3,7 @@
  * This file contains the Composer plugin for dealing with MU Plugin loading.
  *
  * The main job of this plugin is to dump the bootstrap file when the Composer
- * autoloder is dumped. It also contains the method for overriding the type
+ * autoloader is dumped. It also contains the method for overriding the type
  * in normal plugins, placing them in the MU directory on install.
  *
  * @license MIT
