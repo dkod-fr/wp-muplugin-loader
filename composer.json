@@ -34,8 +34,11 @@
         }
     },
     "extra": {
-        "class": "LkWdwrd\\MuPluginLoader\\Composer\\MuLoaderPlugin"
-    },
+        "class": "LkWdwrd\\MuPluginLoader\\Composer\\MuLoaderPlugin",
+        "branch-alias": {
+            "dev-main": "2.0.x-dev"
+        }
+   },
     "require": {
         "php": "^7.3 || ^8.0",
         "composer-plugin-api": "^1.0 || ^2.0",
