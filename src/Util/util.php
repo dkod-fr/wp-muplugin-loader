@@ -20,11 +20,11 @@ namespace LkWdwrd\MuPluginLoader\Util;
  * @param  string $ps   The string to use as the path separator.
  * @return string       The relative path between $from and $to.
  */
-function rel_path($from, $to, $ps = DIRECTORY_SEPARATOR): string
+function rel_path(string $from, string $to, string $ps = DIRECTORY_SEPARATOR): string
 {
     // Turn paths into array.
-    $arFrom = explode($ps, rtrim(normalize($from, $ps), $ps));
-    $arTo = explode($ps, rtrim(normalize($to, $ps), $ps));
+    $arFrom = explode($ps, rtrim(namespace\normalize($from, $ps), $ps));
+    $arTo = explode($ps, rtrim(namespace\normalize($to, $ps), $ps));
     // Strip the common roots from both arrays.
     while (count($arFrom) && count($arTo) && ($arFrom[0] == $arTo[0])) {
         array_shift($arFrom);
@@ -42,7 +42,7 @@ function rel_path($from, $to, $ps = DIRECTORY_SEPARATOR): string
  * @param  string $ds   The directory separator to standardize on
  * @return string       The normalized path
  */
-function normalize($path, $ds): string
+function normalize(string $path, string $ds): string
 {
     return str_replace([ '/', "\\" ], $ds, $path);
 }

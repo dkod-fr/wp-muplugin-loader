@@ -1,6 +1,6 @@
 <?php
 /**
- * All of the methods to properly load any Must-Use plugins into WordPress.
+ * All the methods to properly load any Must-Use plugins into WordPress.
  *
  * @license MIT
  * @copyright Luke Woodward
@@ -86,17 +86,20 @@ function get_muplugins(string $abs = ABSPATH, string $pdir = WP_PLUGIN_DIR, stri
  * also change. If it does not match the old key, the previous cache entry is
  * removed and the new key is stored for future comparisons.
  *
- * Doing this ensures as the MU-Plugins directory changes, regaurdless of the
+ * Doing this ensures as the MU-Plugins directory changes, regardless of the
  * caching mechanism, even the options table, the data will not build up over
- * time. Especially important when the options table is used.
+ * time. Especially important when the wp_options table is used.
  *
- * @param  string $mudir The MU Plugins Directory. Default: WPMU_PLUGIN_DIR
+ * @param string $mudir The MU Plugins Directory. Default: WPMU_PLUGIN_DIR
+ *
  * @return string        An MD5 cache key to use.
+ * @throws \JsonException If the directory listing can't be json encoded.
  */
 function get_muloader_key(string $mudir = WPMU_PLUGIN_DIR): string
 {
     $old_key = get_site_transient('lkw_mu_loader_key');
-    $key = md5(json_encode(scandir($mudir)));
+
+    $key = md5(json_encode(scandir($mudir), JSON_THROW_ON_ERROR));
     if ($old_key !== $key) {
         if ($old_key) {
             delete_site_transient($old_key);
