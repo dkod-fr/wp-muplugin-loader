@@ -9,8 +9,9 @@ use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\Package;
-use Composer\Package\PackageInterface;
+use Composer\Package\RootPackageInterface;
 use LkWdwrd\MuPluginLoader\Composer\MuLoaderPlugin;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class MuLoaderPluginTest extends TestCase
@@ -383,11 +384,11 @@ class MuLoaderPluginTest extends TestCase
     /**
      * @param array $extraConfig Config for the extra section you want returned from getExtra()
      *
-     * @return Composer|\PHPUnit\Framework\MockObject\MockObject
+     * @return Composer|MockObject
      */
     private function mock_composer(array $extraConfig = [])
     {
-        $package = $this->getMockBuilder(PackageInterface::class)->getMock();
+        $package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
         $config = $this->getMockBuilder(Config::class)->getMock();
         $composer = $this->getMockBuilder(Composer::class)->getMock();
 
@@ -406,7 +407,7 @@ class MuLoaderPluginTest extends TestCase
      * @param string $pluginName Name of plugin name to return for getName call
      * @param string $pluginType Name of plugin type to return for getType call
      *
-     * @return Package|\PHPUnit\Framework\MockObject\MockObject
+     * @return Package|MockObject
      */
     private function mock_package(string $pluginName, string $pluginType = 'wordpress-plugin')
     {
