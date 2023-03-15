@@ -188,7 +188,7 @@ class MuLoaderPlugin implements PluginInterface, EventSubscriberInterface
             file_put_contents(
                 $muPath . $muRequireFile,
                 // Need to break up __DIR__ to stop this https://github.com/composer/composer/blob/32966a3b1d48bc01472a8321fd6472b44fad033a/src/Composer/Plugin/PluginManager.php#L193 occurring.
-                "<?php\n" . $this->getMuRequireGeneratedDocBlock() . "\n" . 'require_once __DI' . 'R__ . ' . "'${toLoader}';\n"
+                "<?php\n" . $this->getMuRequireGeneratedDocBlock() . "\n" . 'require_once __DI' . 'R__ . ' . "'{$toLoader}';\n"
             );
         }
     }
