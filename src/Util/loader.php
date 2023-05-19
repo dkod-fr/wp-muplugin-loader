@@ -104,7 +104,9 @@ function get_muloader_key(string $mudir = WPMU_PLUGIN_DIR): string
         if ($old_key) {
             delete_site_transient($old_key);
         }
-        set_site_transient('lkw_mu_loader_key', $key);
+        // Set the key to expire in a day, just so if the md5 scan matches
+        // new plugins will eventually be loaded
+        set_site_transient('lkw_mu_loader_key', $key, 60 * 60 * 24);
     }
     return $key;
 }
