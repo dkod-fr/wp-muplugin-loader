@@ -188,7 +188,7 @@ class LoaderTest extends TestCase
         ]);
         WP_Mock::userFunction('set_site_transient', [
             'times' => 1,
-            'args' => [ 'lkw_mu_loader_key', $this->key ]
+            'args' => [ 'lkw_mu_loader_key', $this->key, 60 * 60 * 24 ]
         ]);
         // Run the test
         $result = Util\get_muloader_key();
