@@ -124,3 +124,21 @@ mu plugin loader where your mu plugins are kept:
 ```php
 define('MU_PLUGIN_LOADER_SRC_DIR', WPCOM_VIP_CLIENT_MU_PLUGIN_DIR . '/');
 ```
+
+## Filtering the mu plugins loaded
+
+You may wish to filer the mu plugins loaded by the mu plugin loader. WordPress does not provide any hook that is early enough
+to ensure that this filter is registered before the plugins are loaded, so filtering of this list should be applied immediately before the mu-loader is initialised. You can modify the `mu-require.php` file like the below, or create a new file that's alphabetically before `mu-require.php` file in your `mu-plugins` directory. 
+
+```php
+add_filter(
+    'lkwdwrd_mupluginloader_get_muplugins',
+    function ( array $plugins ):  array {
+        unset( $plugins['example/plugin.php'] );
+        return $plugins;
+    }
+);
+
+// Load the mu loader
+require_once 'vendor/boxuk/wp-muplugin-loader/src/mu-loader.php';
+```
