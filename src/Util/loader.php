@@ -73,7 +73,18 @@ function get_muplugins(string $abs = ABSPATH, string $pdir = WP_PLUGIN_DIR, stri
         }
         set_site_transient($key, $plugins);
     }
-    return $plugins;
+
+    /**
+     * Filter the list of Must-Use plugins. This must be done very early, likely
+     * by creating a file in the `mu-plugins` directory which is alphabetically
+     * before this MU-Loader is loaded.
+     *
+     * @param string[] $plugins The list of Must-Use plugin files, relative to
+     *                         the Must-Use plugins directory.
+     *
+     * @return string[] The filtered list of Must-Use plugins.
+     */
+    return (array) apply_filters('lkwdwrd_mupluginloader_get_muplugins', $plugins);
 }
 
 /**
