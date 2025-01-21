@@ -1,6 +1,6 @@
 # WP Must-Use Plugin Loader
 
-[![Build Status](https://travis-ci.org/boxuk/wp-muplugin-loader.svg?branch=master)](https://travis-ci.org/boxuk/wp-muplugin-loader)
+> This project is now abandoned. We've moved to use [Roots Bedrock Autoloader](https://github.com/roots/bedrock-autoloader) in our [project skeleton](https://github.com/boxuk/wp-project-skeleton).
 
 ## Attribution
 
