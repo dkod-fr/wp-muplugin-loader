@@ -1,7 +1,6 @@
 {
-    "name": "boxuk/wp-muplugin-loader",
+    "name": "dkod-fr/wp-muplugin-loader",
     "description": "A drop-in MU Plugin loader for WordPress",
-    "abandoned": "roots/bedrock-autoloader",
     "keywords": [
         "wordpress",
         "muplugin",
